@@ -13,8 +13,6 @@ import LocalAuthentication
 
 struct ContentView: View {
     @StateObject private var viewModel = ViewModel()
-    
-    
     var body: some View {
         ZStack {
             if viewModel.isUnlocked {
@@ -47,14 +45,13 @@ struct ContentView: View {
                         Button {
                             viewModel.addLocation()
                         } label: {
-                            Image(systemName: "plus")
+                            Image(systemName: "plus").padding()
+                                .background(.black.opacity(0.75))
+                                .foregroundColor(.white)
+                                .font(.title)
+                                .clipShape(Circle())
+                                .padding([.bottom, .trailing])
                         }
-                        .padding()
-                        .background(.black.opacity(0.75))
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .clipShape(Circle())
-                        .padding([.bottom, .trailing])
                     }
                 }
             } else {
@@ -66,7 +63,11 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .clipShape(Capsule())
             }
-        }.sheet(item: $viewModel.selectedPlace) { place in
+        }
+        .alert("Failed to authenticate, please try again", isPresented: $viewModel.showingAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .sheet(item: $viewModel.selectedPlace) { place in
             EditView(location: place) {
                 viewModel.update(location: $0)
             }

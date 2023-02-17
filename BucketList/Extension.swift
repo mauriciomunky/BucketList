@@ -5,7 +5,7 @@
 //  Created by Maurício Costa on 16/02/23.
 //
 
-import SwiftUI
+import Foundation
 
 extension FileManager {
 

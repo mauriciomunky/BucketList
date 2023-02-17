@@ -8,12 +8,14 @@
 import Foundation
 import MapKit
 import LocalAuthentication
+import SwiftUI
 
 extension ContentView {
     @MainActor class ViewModel: ObservableObject {
         @Published var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 50, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25))
         @Published private(set) var locations: [Location]
         @Published var selectedPlace: Location?
+        @Published var showingAlert = false
         
         func addLocation() {
             let newLocation = Location(id: UUID(), name: "New location", description: "", latitude: mapRegion.center.latitude, longitude: mapRegion.center.longitude)
@@ -67,7 +69,9 @@ extension ContentView {
                                 self.isUnlocked = true
                         }
                     } else {
-                        // there was a problem
+                        Task { @MainActor in
+                            self.showingAlert = true
+                        }
                     }
                 }
             } else {
